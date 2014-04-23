@@ -5,25 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var models = require('./models/index.js');
-// var oAuthModels = require('./oauthModels');
-// var oauthserver = require('node-oauth2-server');
 var request = require('request');
 var passport = require('passport');
 var b = require('bonescript');
-// var BasicStrategy = require('passport-http').BasicStrategy;
 
 var app = express();
 
 /**
  * Configure the app
  */
-//oauth setup
-// app.oauth = oauthserver({
-//     model: oAuthModels,
-//     grants: ['password'],
-//     debug: true,
-//     accessTokenLifetime: null
-// });
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -38,67 +28,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-/**
- * HTTP Basic Auth via Passport
- */
-// var authUsers = [
-//     { id: 1, username: 'drupal', password: 'lapurd' },
-//     { id: 2, username: 'crawl_service', password: 'PrattleCrawl2014' }
-// ];
-
-// function findByUsername(username, fn) {
-//     for (var i = 0, len = authUsers.length; i < len; i++) {
-//         var user = authUsers[i];
-//         if (user.username === username) {
-//             return fn(null, user);
-//         }
-//     }
-//     return fn(null, null);
-// }
-
-// passport.use(new BasicStrategy({
-//     },
-//     function(username, password, done) {
-//         // asynchronous verification, for effect...
-//         process.nextTick(function () {
-
-//             // Find the user by username.  If there is no user with the given
-//             // username, or the password is not correct, set the user to `false` to
-//             // indicate failure.  Otherwise, return the authenticated `user`.
-//             findByUsername(username, function(err, user) {
-//                 if (err) { return done(err); }
-//                 if (!user) { return done(null, false); }
-//                 if (user.password != password) { return done(null, false); }
-//                 return done(null, user);
-//             })
-//         });
-//     }
-// ));
-
-// app.passport = passport;
+app.passport = passport;
 
 /**
  * Register the routes the app will use
  */
 
-// Handle token grant requests
-// app.all('/oauth/token', app.oauth.grant());
+var index  = require('./routes/index');
+var public = require('./routes/public');
+var api  = require('./routes/api');
 
-// var index  = require('./routes/index');
-// var users  = require('./routes/users')(app);
-// var public = require('./routes/public');
-// var secret = require('./routes/secret')(app);
-// var persist  = require('./routes/persist')(app);
-// var api  = require('./routes/api')(app);
-// var banks = require('./routes/banks')(app);
-
-// app.use('/', index);
-// app.use('/users', users);
-// app.use('/public', public);
-// app.use('/secret', secret);
-// app.use('/persist', persist);
-// app.use('/api', api);
-// app.use('/banks', banks);
+app.use('/', index);
+app.use('/public', public);
+app.use('/api', api);
 
 /**
  * Catch and Handle route errors below
@@ -110,9 +52,6 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
-
-// Oauth Error handling
-// app.use(app.oauth.errorHandler());
 
 // development error handler
 // will print stacktrace
@@ -154,3 +93,5 @@ function interruptCallback(x) {
 } 
 
 module.exports = app;
+
+app.listen(3101);
