@@ -1,0 +1,25 @@
+{
+  "name": "capstone-services",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "express": "~4.2.0",
+    "static-favicon": "~1.0.0",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4",
+    "jade": "~1.3.0",
+    "mysql": "~2.3.2",
+    "lodash": "~2.4.1",
+    "node-oauth2-server": "2.1.1",
+    "sequelize": "~1.7.8",
+    "request": "2.36.0",
+    "passport": "~0.2.0",
+    "passport-http": "~0.2.2",
+    "string_decoder": "latest"
+  }
+}
