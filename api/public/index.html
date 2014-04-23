@@ -1,0 +1,34 @@
+<head>
+<link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css">
+<script src="jquery/dist/jquery.min.js"></script>
+</head>
+<script>
+    $(document).ready(function(){
+        // $("#data").load("http://192.168.7.2:3101/api");
+    
+        $.get( "http://192.168.7.2:3101/api", function( data ) {
+            $("#data").html( data );
+            console.log(data);
+        });
+    });
+    
+
+    // var models = require('../models');
+    
+    // models.Test.findAll().success(function(tests) {
+    //     var stuff = (JSON.stringify(tests));    
+    //     console.log(stuff);
+    // }).failure(function(error) {
+    //     // res.send(error);
+    //     console.log('error');
+    // });
+    
+</script>
+<body>
+    <div class="jumbotron">
+        div div div
+    </div>
+    <div id="data">
+        
+    </div>
+</body>
