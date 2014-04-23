@@ -9,97 +9,107 @@
 </head>
 <script>
     $(document).ready(function(){
-        // $.get( "http://192.168.7.2:3101/api", function( data ) {
+        // $.get( "http://192.168.7.2:3101/api?date=10232005", function( data ) {
         //     $("#data").html( data );
         //     console.log(data);
         // });
         
-        $.get("http://beaglebone.local:3101/api", function( data ) {
-            $("#data").html( data );
-            console.log(data);
-        });
+        // $.get("http://beaglebone.local:3101/api", function( data ) {
+        //     $("#data").html( data );
+        //     console.log(data);
+        // });
         
         var chartData = new Array();
         for(var i=0;i<1440;i++) {
             chartData.push(Math.random());
-        }  
+        }
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
         
-        $(function () {
-            console.log(chartData);    
-            $('.chart').highcharts({
-                chart: {
-                    zoomType: 'x',
-                    events: {
-                        redraw: function () {
-                            var label = this.renderer.label('The chart was just redrawn', 100, 120)
-                                .attr({
-                                    fill: Highcharts.getOptions().colors[0],
-                                    padding: 10,
-                                    r: 5,
-                                    zIndex: 8
-                                })
-                                .css({
-                                    color: '#FFFFFF'
-                                })
-                                .add();
-        
-                            setTimeout(function () {
-                                label.fadeOut();
-                            }, 1000);
-                        }
-                    }
-                },
-                title: {
-                    text: 'USD to EUR exchange rate from 2006 through 2008'
-                },
-                subtitle: {
-                    text: document.ontouchstart === undefined ?
-                            'Click and drag in the plot area to zoom in' :
-                            'Pinch the chart to zoom in'
-                },
-                xAxis: {
-                    type: 'datetime',
-                    // minRange: 14 * 24 * 3600000 // fourteen days
-                },
-                yAxis: {
-                    title: {
-                        text: 'Exchange rate'
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                plotOptions: {
-                    area: {
-                        fillColor: {
-                            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
-                            stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                            ]
-                        },
-                        marker: {
-                            radius: 2
-                        },
-                        lineWidth: 1,
-                        states: {
-                            hover: {
-                                lineWidth: 1
+        $.get( "http://192.168.7.2:3101/api?date=" + now.valueOf(), function( data ) {
+            // $("#data").html( data );
+            // console.log(data);
+            $(function () {
+                console.log(data);    
+                $('.chart').highcharts({
+                    chart: {
+                        zoomType: 'x',
+                        events: {
+                            redraw: function () {
+                                var label = this.renderer.label('The chart was just redrawn', 100, 120)
+                                    .attr({
+                                        fill: Highcharts.getOptions().colors[0],
+                                        padding: 10,
+                                        r: 5,
+                                        zIndex: 8
+                                    })
+                                    .css({
+                                        color: '#FFFFFF'
+                                    })
+                                    .add();
+            
+                                setTimeout(function () {
+                                    label.fadeOut();
+                                }, 1000);
                             }
-                        },
-                        threshold: null
-                    }
-                },
-        
-                series: [{
-                    type: 'area',
-                    name: 'USD to EUR',
-                    pointInterval: 60 * 1000,
-                    pointStart: Date.UTC(2006, 0, 1),
-                    data: chartData
-                }]
+                        }
+                    },
+                    title: {
+                        text: 'Radiation Intensity'
+                    },
+                    subtitle: {
+                        text: document.ontouchstart === undefined ?
+                                'Click and drag in the plot area to zoom in' :
+                                'Pinch the chart to zoom in'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        // minRange: 14 * 24 * 3600000 // fourteen days
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Intensity'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        area: {
+                            fillColor: {
+                                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                                stops: [
+                                    [0, Highcharts.getOptions().colors[0]],
+                                    [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                                ]
+                            },
+                            marker: {
+                                radius: 2
+                            },
+                            lineWidth: 1,
+                            states: {
+                                hover: {
+                                    lineWidth: 1
+                                }
+                            },
+                            threshold: null
+                        }
+                    },
+            
+                    series: [{
+                        type: 'area',
+                        name: 'Radiation Intensity',
+                        pointInterval: 60 * 1000,
+                        pointStart: Date.UTC(2006, 0, 1),
+                        data: JSON.parse(data)
+                    }]
+                });
             });
+            
         });
+        
+        
+        
         
         var datepicker = $('#dp2').datepicker().on('changeDate', function(ev) {
             var chart = $('.chart').highcharts();
@@ -107,7 +117,14 @@
             for(var i=0;i<1440;i++) {
                 chartData.push(Math.random());
             }
-            chart.series[0].setData(chartData);
+            // console.log(JSON.stringify(ev));
+            // console.log(ev.date.valueOf());
+            // console.log(Date());
+            $.get( "http://192.168.7.2:3101/api?date=" + ev.date.valueOf(), function( data ) {
+                console.log(data);
+                chart.series[0].setData(JSON.parse(data));
+            });
+            
             datepicker.hide();
         }).data('datepicker');
         
@@ -121,7 +138,7 @@
         </div>
         <div class="row">
             <div class="col-xs-4 text-center">
-                <input type="text" class="span2" value="02/16/12" data-date-format="mm/dd/yyyy" id="dp2">
+                <input type="text" class="span2" data-date-format="mm/dd/yyyy" id="dp2">
             </div>
         </div>
         <div class="row">
