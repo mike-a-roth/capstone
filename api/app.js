@@ -77,14 +77,26 @@ app.use(function(err, req, res, next) {
 
 var models = require('./models');
 var inputPin = 'P8_12';
+
+// for(var i=0;i<50;i++) {
+    // setInterval(function () {
+        // models.EMP.create({
+        //      pulse: true
+        // }).failure(function(error) {
+        //      console.log(error);
+        // });     
+    // }, 5000);
+// }
+
+
 b.pinMode(inputPin, b.INPUT);
 b.attachInterrupt(inputPin, true, b.RISING, interruptCallback);
 
 function interruptCallback(x) {
     // console.log(JSON.stringify(x));
     if (b.digitalRead(inputPin)===1) {
-        models.Test.create({
-             name: true
+        models.EMP.create({
+             pulse: true
          }).failure(function(error) {
              console.log(error);
          });

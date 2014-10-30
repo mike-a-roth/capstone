@@ -6,7 +6,10 @@ router.get('/', function(req, res) {
     
     // console.log('API endpoint hit.');
     
-    models.Test.findAll().success(function(tests) {
+    models.EMP.findAll().success(function(emps) {
+        emps.forEach(function(emp) {
+            console.log(JSON.stringify(emp));
+        });
         res.send(JSON.stringify(tests));    
     }).failure(function(error) {
         res.send(error);
