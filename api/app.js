@@ -76,15 +76,14 @@ app.use(function(err, req, res, next) {
 });
 
 var models = require('./models');
-
 var inputPin = 'P8_12';
 b.pinMode(inputPin, b.INPUT);
-b.attachInterrupt(inputPin, true, b.CHANGE, interruptCallback);
+b.attachInterrupt(inputPin, true, b.RISING, interruptCallback);
 
 function interruptCallback(x) {
-    if(x.value==1) {
-        // console.log('x.value = ' + x.value);
-         models.Test.create({
+    // console.log(JSON.stringify(x));
+    if (b.digitalRead(inputPin)===1) {
+        models.Test.create({
              name: true
          }).failure(function(error) {
              console.log(error);
