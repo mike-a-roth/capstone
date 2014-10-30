@@ -1,7 +1,10 @@
 <head>
     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/datepicker.css">
     <script src="javascript/jquery/dist/jquery.min.js"></script>
+    <script src="stylesheets/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="javascript/ChartJs/Chart.js"></script>
+    <script src="javascript/datepicker/js/bootstrap-datepicker.js"></script>
     <script src="javascript/Highcharts-4.0.4/js/highcharts.src.js"></script>
 </head>
 <script>
@@ -10,6 +13,7 @@
         //     $("#data").html( data );
         //     console.log(data);
         // });
+        
         $.get("http://beaglebone.local:3101/api", function( data ) {
             $("#data").html( data );
             console.log(data);
@@ -24,7 +28,26 @@
             console.log(chartData);    
             $('.chart').highcharts({
                 chart: {
-                    zoomType: 'x'
+                    zoomType: 'x',
+                    events: {
+                        redraw: function () {
+                            var label = this.renderer.label('The chart was just redrawn', 100, 120)
+                                .attr({
+                                    fill: Highcharts.getOptions().colors[0],
+                                    padding: 10,
+                                    r: 5,
+                                    zIndex: 8
+                                })
+                                .css({
+                                    color: '#FFFFFF'
+                                })
+                                .add();
+        
+                            setTimeout(function () {
+                                label.fadeOut();
+                            }, 1000);
+                        }
+                    }
                 },
                 title: {
                     text: 'USD to EUR exchange rate from 2006 through 2008'
@@ -77,12 +100,29 @@
                 }]
             });
         });
+        
+        var datepicker = $('#dp2').datepicker().on('changeDate', function(ev) {
+            var chart = $('.chart').highcharts();
+            chartData = [];
+            for(var i=0;i<1440;i++) {
+                chartData.push(Math.random());
+            }
+            chart.series[0].setData(chartData);
+            datepicker.hide();
+        }).data('datepicker');
+        
+        
     });
 </script>
 <body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-12 chart"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 text-center">
+                <input type="text" class="span2" value="02/16/12" data-date-format="mm/dd/yyyy" id="dp2">
+            </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
