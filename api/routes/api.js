@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
         emps.forEach(function(emp) {
             console.log(JSON.stringify(emp));
         });
-        res.send(JSON.stringify(tests));    
+        res.send(JSON.stringify(emps));    
     }).failure(function(error) {
         res.send(error);
         console.log('error');
