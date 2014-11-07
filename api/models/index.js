@@ -2,7 +2,7 @@ var fs          = require('fs')
     , path      = require('path')
     , Sequelize = require('sequelize')
     , lodash    = require('lodash')
-    , sequelize = new Sequelize('capstone', 'cap', 'ece', {
+    , sequelize = new Sequelize('capstone_mock_data', 'capstone_user', 'capstone_password', {
         host: 'localhost',
         // port: 3310,
         port: 3306,

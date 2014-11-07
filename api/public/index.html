@@ -9,49 +9,41 @@
 </head>
 <script>
     $(document).ready(function(){
-        // $.get( "http://192.168.7.2:3101/api?date=10232005", function( data ) {
-        //     $("#data").html( data );
-        //     console.log(data);
-        // });
-        
-        // $.get("http://beaglebone.local:3101/api", function( data ) {
-        //     $("#data").html( data );
-        //     console.log(data);
-        // });
-        
-        var chartData = new Array();
-        for(var i=0;i<1440;i++) {
-            chartData.push(Math.random());
-        }
+        // var chartData = new Array();
+        // for(var i=0;i<1440;i++) {
+        //     chartData.push(Math.random());
+        // }
         var nowTemp = new Date();
         var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        var nowUTC = Date.UTC(nowTemp.getUTCFullYear(), nowTemp.getUTCMonth(), nowTemp.getUTCDate(), 0, 0, 0, 0);
         
-        $.get( "http://192.168.7.2:3101/api?date=" + now.valueOf(), function( data ) {
+        $.get( "http://beaglebone.local:3101/api?date=" + now.valueOf(), function( data ) {
+        // $.get( "http://192.168.7.2:3101/api?date=" + now.valueOf(), function( data ) {
             // $("#data").html( data );
             // console.log(data);
             $(function () {
-                console.log(data);    
+                // console.log(data); 
                 $('.chart').highcharts({
                     chart: {
                         zoomType: 'x',
                         events: {
-                            redraw: function () {
-                                var label = this.renderer.label('The chart was just redrawn', 100, 120)
-                                    .attr({
-                                        fill: Highcharts.getOptions().colors[0],
-                                        padding: 10,
-                                        r: 5,
-                                        zIndex: 8
-                                    })
-                                    .css({
-                                        color: '#FFFFFF'
-                                    })
-                                    .add();
+                            // redraw: function () {
+                            //     var label = this.renderer.label('The chart was just redrawn', 100, 120)
+                            //         .attr({
+                            //             fill: Highcharts.getOptions().colors[0],
+                            //             padding: 10,
+                            //             r: 5,
+                            //             zIndex: 8
+                            //         })
+                            //         .css({
+                            //             color: '#FFFFFF'
+                            //         })
+                            //         .add();
             
-                                setTimeout(function () {
-                                    label.fadeOut();
-                                }, 1000);
-                            }
+                            //     setTimeout(function () {
+                            //         label.fadeOut();
+                            //     }, 1000);
+                            // }
                         }
                     },
                     title: {
@@ -100,7 +92,7 @@
                         type: 'area',
                         name: 'Radiation Intensity',
                         pointInterval: 60 * 1000,
-                        pointStart: Date.UTC(2006, 0, 1),
+                        pointStart: nowUTC.valueOf(),
                         data: JSON.parse(data)
                     }]
                 });
@@ -114,15 +106,14 @@
         var datepicker = $('#dp2').datepicker().on('changeDate', function(ev) {
             var chart = $('.chart').highcharts();
             chartData = [];
-            for(var i=0;i<1440;i++) {
-                chartData.push(Math.random());
-            }
-            // console.log(JSON.stringify(ev));
-            // console.log(ev.date.valueOf());
-            // console.log(Date());
-            $.get( "http://192.168.7.2:3101/api?date=" + ev.date.valueOf(), function( data ) {
-                console.log(data);
-                chart.series[0].setData(JSON.parse(data));
+            // $.get( "http://192.168.7.2:3101/api?date=" + ev.date.valueOf(), function( data ) {
+            $.get( "http://beaglebone.local:3101/api?date=" + ev.date.valueOf(), function( data ) {
+                // console.log(data);
+                ev.date.setUTCHours(0);
+                chart.series[0].update({
+                    pointStart: ev.date.valueOf(),
+                    data: JSON.parse(data)
+                });
             });
             
             datepicker.hide();

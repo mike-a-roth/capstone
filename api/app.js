@@ -78,14 +78,13 @@ app.use(function(err, req, res, next) {
 var models = require('./models');
 var inputPin = 'P8_12';
 
-// for(var i=0;i<50;i++) {
+// for(var i=0;i<6;i++) {
     // setInterval(function () {
-        models.EMP.create({
-             pulse: true
-            //  timestamp: new Date()
-        }).failure(function(error) {
-             console.log(error);
-        });     
+    //     models.EMP.create({
+    //          pulse: true
+    //     }).failure(function(error) {
+    //          console.log(error);
+    //     });     
     // }, 5000);
 // }
 
